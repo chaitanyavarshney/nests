@@ -1,25 +1,28 @@
-import { Controller, Get, Header, HttpCode, HttpStatus, Redirect, Req, Res } from "@nestjs/common";
-import { Request, Response } from "express";
-import { PassThrough } from "stream";
+import { BadRequestException, Controller, Get, Header, HttpCode, Param, Query, Req,  } from "@nestjs/common";
+import { Request } from "express";
 
+interface QueryParam {
+    name: string,
+    value: string,
+}
 @Controller('/users')
+
 export class UserController {
 
-    @Get('/profile')
-    @Redirect('/users/wallet', 302)
+    @Get('/profile/:id')
     @Header('X-Name', 'new')
-    getProfile(@Req() req: Request, @Res({passthrough: true}) res: Response) {
-        res.status(302)
-        return{
-            url: '/users/acc',
-            statusCode: 302
+    @HttpCode(201)
+    getProfile(
+        @Req() req: Request,
+        @Param('id')id: string, 
+        @Query('value') value: QueryParam['value']
+    ) {
+        if (!value) {
+            throw new BadRequestException('Query parameter "value" is required');
         }
-    }
-
-    @Get('/acc')
-    getWallet(){
-        return {
-            number: '34'
+        return{
+            id,
+            value
         }
     }
 }
