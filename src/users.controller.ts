@@ -6,19 +6,20 @@ import { PassThrough } from "stream";
 export class UserController {
 
     @Get('/profile')
-    // @Redirect('/users/wallet', 302)
+    @Redirect('/users/wallet', 302)
     @Header('X-Name', 'new')
     getProfile(@Req() req: Request, @Res({passthrough: true}) res: Response) {
         res.status(302)
-        return({
-            name: "chaitan"
-        })
+        return{
+            url: '/users/acc',
+            statusCode: 302
+        }
     }
 
-    @Get('/wallet')
+    @Get('/acc')
     getWallet(){
         return {
-            sgr: '34'
+            number: '34'
         }
     }
 }
